@@ -1,0 +1,118 @@
+.list-menu--right {
+  right: 0;
+}
+.sub-mega {
+  position: absolute;
+  left: auto;
+  right: auto;
+}
+
+.sub-mega .menu-image img {
+  margin-top: 10px;
+  float: left;
+}
+
+.list-menu--disclosure {
+  display: grid;
+  position: absolute;
+  min-width: 570px;
+  width: auto;
+  background-color: #fff;
+  top: 30px;
+  filter: alpha(opacity=100);
+  -webkit-transition: all 700ms ease 0s;
+  -moz-transition: all 700ms ease 0s;
+  -o-transition: all 700ms ease 0s;
+  transition: all 700ms ease 0s;
+  border: 1px solid var(--color-base-border);
+  left: 0;
+  border-radius: 0;
+  z-index: 9;
+  opacity: 0;
+  visibility: hidden;
+  box-shadow: 0 0 29px 0 rgba(0, 0, 0, 4%);
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.more-site-nav .site-nav__dropdown .list-menu {
+  min-width: 180px;
+}
+.header__submenu.list-menu li {
+  float: left;
+  width: 158px;
+  text-align: left;
+}
+.header__submenu.list-menu,
+.more-site-nav .list-menu {
+  overflow: hidden;
+  background-color: #fff;
+}
+.more-site-nav .site-nav__dropdown {
+  position: absolute;
+}
+
+.list-menu--disclosure:focus {
+  outline: none;
+}
+#header-nav li .list-menu.list-menu--disclosure .header__menu-item::after {
+  border: none;
+}
+
+.list-menu__item--active {
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+
+.list-menu--disclosure.localization-selector {
+  max-height: 18rem;
+  overflow: auto;
+  width: 10rem;
+  padding: 0.5rem;
+}
+.list-menu--inline > li:hover .list-menu--disclosure {
+  top: 0;
+  filter: alpha(opacity=100);
+  -webkit-transition: all 700ms ease 0s;
+  -moz-transition: all 700ms ease 0s;
+  -o-transition: all 700ms ease 0s;
+  transition: all 700ms ease 0s;
+  opacity: 1;
+  visibility: visible;
+}
+.list-menu--inline
+  > li
+  .header__submenu.list-menu--disclosure.header-menu__list--condensed {
+  min-width: 210px;
+}
+.list-menu--inline
+  > li:hover
+  .header__submenu.list-menu--disclosure.header-menu__list--condensed,
+.list-menu--inline
+  > li
+  .header__submenu.list-menu--disclosure.header-menu__list--condensed {
+  flex-direction: column;
+  padding: 15px;
+  display: flex;
+}
+.site-nav__dropdown .header__menu-item {
+  font-weight: 500;
+}
+.site-nav__dropdown .header__menu-item {
+  font-weight: 500;
+  padding: 10px 15px 0;
+}
+.site-nav__dropdown li:last-child .header__menu-item {
+  padding-bottom: 15px;
+}
+.more-site-nav li:first-child .header__menu-item {
+  padding-left: 15px;
+  padding-top: 15px;
+}
+
+@media screen and (max-width: 1149px) {
+  .header__submenu.list-menu li {
+    width: 145px;
+  }
+  .list-menu--disclosure {
+    min-width: 550px;
+  }
+}

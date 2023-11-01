@@ -1,0 +1,104 @@
+{{ 'section-tm-subbanners.css' | asset_url | stylesheet_tag }}
+
+<div class="tm-banners">
+  <div class="page-width page-width-desktop">
+    <div class="page-width-inner {{ section.settings.addclass }}">
+     {%- assign i = 1 -%} 
+     {% for block in section.blocks %} 
+         <div class="sub-banner banner-{{ i }}">
+       <a href="{{ block.settings.button_link }}">
+          
+           {%- if block.settings.subbanner != blank -%}
+           <div class="banner-inner">
+             
+                 <img src="{{ block.settings.subbanner | img_url: "master" }}"
+                 itemprop="banner">
+                 
+            </div>  
+           {%- else -%}
+                 <span>
+                    {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+                    {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                 </span>
+         
+           {%- endif -%}
+           
+            <div class="subbanner-description">
+              <div class="subbanner-custom">
+                  {{  block.settings.custom_liquid }}
+                  {% if block.settings.button_link != blank %}
+                  <div class="text-button">
+                      <div  class="button cms__btn">
+                          {{ block.settings.button_label | escape }}
+                      </div>
+                  </div>
+               {% endif %}
+              </div>
+              
+             </div>
+      </a>
+         </div>
+         {%- assign i = i | plus:1 -%}
+       {% endfor %}
+  	</div>
+  </div> 
+</div>
+
+
+{% schema %}
+  {
+    "name": "t:sections.tm-subbanners.name",
+	  "tag": "section",
+	"class": "spaced-section subbanners-section spaced-section--full-width",
+    "max_blocks": 3,
+    "settings": [
+	   {
+        "type": "text",
+        "id": "addclass",
+        "label": "t:sections.tm-subbanners.settings.addclass.label"
+	   }
+	],
+    "blocks": [
+      { 
+        "type": "image",
+		"name": "t:sections.tm-subbanners.blocks.name",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "subbanner",
+            "label": "t:sections.tm-subbanners.blocks.settings.subbanner.label"
+          },
+          {
+            "type": "liquid",
+            "id": "custom_liquid",
+            "label": "t:sections.tm-subbanners.blocks.settings.custom_liquid.label",
+			"default": "<div class='cms-banner-title-three'>Weekend 25% Off</div><div class='cms-banner-subtitle-three'>Healthy Oatmeal<br>Waffle</div>"
+          },
+          {
+            "type": "url",
+            "id": "button_link",
+            "label": "t:sections.tm-subbanners.blocks.settings.button_link.label"
+          },
+          {
+            "type": "text",
+            "id": "button_label",
+            "label": "t:sections.tm-subbanners.blocks.settings.button_label.label",
+            "default": "Shop Now"
+          }
+        ]
+      }
+    ],
+	"presets": [
+      {
+        "name": "t:sections.tm-subbanners.presets.name",
+        "category": "t:sections.tm-subbanners.presets.category"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

@@ -1,0 +1,16 @@
+{% if template != 'index' %}
+<nav class="blogcategory_box side-box side_blog" id="CategoryBox" role="categorybox">
+ 	<h3 class="box-heading">{{ section.settings.blog_categories_title | escape }}</h3>
+	<ul class="blog-cat box-content" id="SiteCat">
+      {% for link in linklists[section.settings.blog-categories].links %}
+          <li>
+            <a href="{{ link.url }}" class="site-cat__link site-cat__link--main">{{ link.title }}</a>
+          </li>
+      {% endfor %}
+  	</ul>
+</nav>
+{% endif %}
+
+
+
+

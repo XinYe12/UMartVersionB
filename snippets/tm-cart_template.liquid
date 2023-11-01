@@ -1,0 +1,236 @@
+ {% comment %}
+ this file, tm_cart-template.liquid is responsible for the mini side-cart on the right side of the cart. 
+{% endcomment %}
+{{ 'component-sidecart.css' | asset_url | stylesheet_tag }}
+
+<div class="cart-content">
+  <div class="close-icon">{% render 'icon-close' %}</div>
+  <div class="top-block-cart">
+    <div class="toggle-title">{{ 'sections.cart.title' | t }}</div>
+  </div>
+  <div id="loader">
+    <div></div>
+  </div>
+  <div class="qv-add-to-cart-response">
+    <span class="msg added">&#128522; {{ 'templates.cart.added_to_cart' | t }}</span>
+    <span class="msg removed"> <i class="fa fa-trash-o"></i> &nbsp {{ 'templates.cart.removed_to_cart' | t }}</span>
+  </div>
+
+  <div id="cart_reload">
+    <div class="cart_content">
+      <div class="cart-block-content">
+        <ul class="cart_content-block">
+          {% for item in cart.items %}
+            <li class="tm_cart_block">
+              <div class="tm-cart-image-block">
+                <a href="{{ item.url | within: collections.all }}">
+                  <img
+                    class="cart__image"
+                    src="{{ item.image | img_url: '140x' }}"
+                    alt="{{ item.image.alt | escape }}"
+                    width="70"
+                    height="{{ 70 | divided_by: item.image.aspect_ratio | ceil }}"
+                    loading="lazy"
+                  >
+                </a>
+              </div>
+              <div class="tm-productdetails">
+                <div class="product-item__title">
+                  <a href="{{ item.url }}">
+                    {{ item.product.title }}
+                  </a>
+                  <div class="product-item__price">
+                    <div class="quantity-container">
+                      <button class="quantity-button-sidecart" id="delete-quantity-button-{{ item.id }}" onclick="handleButtonClick({{ item.id }}, {{ item.quantity }})">-</button>
+                      <div class="quantity" id="current-quantity-{{ item.id }}">{{ item.quantity }}</div>
+                      <div class="quantity" id="realtime-quantity-{{ item.id }}"></div>
+                      <button class="quantity-button-sidecart" id="change-quantity-button-{{ item.id }}" onclick="handleAddButton({{ item.id }}, {{ item.quantity }})">+</button>
+                    </div>
+                    <div class="xsymbol">X</div>
+                    <span class="price">{{ item.price | money }}</span>
+                   
+                  </div>
+                  
+
+                                    
+                
+                  {%- unless item.product.has_only_default_variant -%}
+                    {%- for option in item.options_with_values -%}
+                      <div class="cart-variant h4">
+                        <dt>{{ option.name }}:</dt>
+                        <dd>{{ option.value }}</dd>
+                      </div>
+                    {%- endfor -%}
+                  {%- endunless -%}
+                </div>
+        
+                <a
+                  class="item_remove_btn"
+                  href="javascript:void(0);"
+                  onclick="Shopify.removeItem({{ item.id }},{{ item.quantity }})"
+                >
+                  {%- render 'icon-remove' -%}
+                </a>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% if cart.item_count != 0 %}
+        <div class="cart-summary">
+          <div class="cart-total">
+            <div class="cart-total-title">
+              <span class="cart__subtotal-title">{{ 'templates.cart.total' | t }}</span>
+            </div>
+            <div class="cart-product-count">
+              <span>{{ cart.item_count }}</span>
+            </div>
+          </div>
+          <div class="subtotal">
+            <span class="cart__subtotal-title">{{ 'templates.cart.subtotal' | t }}</span>
+            <span class="cart__subtotal">{{ cart.total_price | money }}</span>
+          </div>
+        </div>
+        <div class="cart-viewcart">
+          <a href="{{ routes.cart_url }}" class="dropdown-site-header__cart cart button button--full-width">
+            {{- 'templates.cart.viewcart' | t -}}
+          </a>
+          <a href="/checkout" class="dropdown-site-header__cart checkout button button--full-width">
+            {{- 'sections.cart.checkout' | t -}}
+          </a>
+        </div>
+      {% else %}
+        <div class="no-more-item">
+          <div class="no-cart">
+            {% render 'icon-cart-blank' %}
+          </div>
+          <div class="cart-empty">
+            {{ 'templates.cart.empty' | t }}
+          </div>
+          <a href="{{ routes.all_products_collection_url }}" class="toggle-continue button">
+            {{ 'general.continue_shopping' | t }}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+let clickTimeout;
+let clicking = false;
+let quant_minus = 0;
+let quant_plus = 0;
+
+
+//console.log("element: "+currentQuantityElement);
+function handleButtonClick(itemId, currentQuantity) {
+  
+  quant_minus = quant_minus +1;
+  console.log(quant_minus);
+  const currentQuantElement = document.getElementById(`current-quantity-${itemId}`);
+  let quant = currentQuantElement.textContent;
+  let quantInt = parseInt(quant, 10);
+  const realtimeQuant = document.getElementById(`realtime-quantity-${itemId}`);
+  realtimeQuant.textContent = quantInt-quant_minus;
+  currentQuantElement.style.display = 'none';
+
+  if (!clicking) {
+    clicking = true;
+    // This code will be executed on the first click.
+    // You can choose to do something immediately on the first click.
+  } else {
+    // This code will be executed on subsequent clicks.
+    clearTimeout(clickTimeout);
+    console.log("timeout clear");
+  }
+
+  clickTimeout = setTimeout(function () {
+
+    // This code will be executed after the specified interval (0.3 seconds) of no clicks.
+    clicking = false;
+    currentQuantity = currentQuantity - quant_minus;
+    console.log("current quantity: " + currentQuantity);
+    Shopify.changeQuantity(itemId, currentQuantity);
+    quant_minus = 0;
+  }, 300); // 300 milliseconds (0.3 seconds) interval
+}
+
+function handleAddButton(itemId, currentQuantity) {
+ 
+  quant_plus = quant_plus +1;
+  console.log(quant_plus);
+  const currentQuantElement = document.getElementById(`current-quantity-${itemId}`);
+  let quant = currentQuantElement.textContent;
+  let quantInt = parseInt(quant, 10);
+  const realtimeQuant = document.getElementById(`realtime-quantity-${itemId}`);
+  realtimeQuant.textContent = quantInt+quant_plus;
+  currentQuantElement.style.display = 'none';
+
+  if (!clicking) {
+    clicking = true;
+    // This code will be executed on the first click.
+    // You can choose to do something immediately on the first click.
+  } else {
+    // This code will be executed on subsequent clicks.
+    clearTimeout(clickTimeout);
+    console.log("timeout clear");
+  }
+
+  clickTimeout = setTimeout(function () {
+
+    // This code will be executed after the specified interval (0.3 seconds) of no clicks.
+    clicking = false;
+    currentQuantity = currentQuantity + quant_plus;
+    Shopify.changeQuantity(itemId, currentQuantity);
+    quant_plus = 0;
+  }, 600); // 300 milliseconds (0.3 seconds) interval
+}
+  /**
+   * these codes are to provide the add/delete functions to the cart
+  */
+  Shopify.changeQuantity = async function(id, quantity){
+    console.log("clicked");
+    await $.ajax({
+      method:'POST',
+      url:'/cart/change.js',
+      data:{ id:id, quantity: quantity },
+      dataType: 'json'})
+      .done(function() {
+
+        $(".cart-count-bubble").load(" .cart-count-bubble > *");
+        $("#cart_reload").load("#cart_reload .cart_content > *");
+      })
+      .fail(function(error){
+        console.error("Failed to add quantity", error );
+      });
+   
+
+  }
+
+  Shopify.removeItem = async function(id,quantity){
+    console.log("ready");
+    await $.ajax({
+      method:'POST',
+      url:'/cart/change.js',
+      data:{ id:id, quantity:0 },
+      dataType: 'json'})
+     .done(function() {
+        $(".qv-add-to-cart-response").addClass('error');
+        $(".qv-add-to-cart-response").removeClass('success');
+        $('.qv-add-to-cart-response .msg').delay(3000).fadeTo(1000, 0);
+         $('.qv-add-to-cart-response .msg').removeAttr("style");
+        $(".cart-count-bubble").load(" .cart-count-bubble > *");
+        $("#cart_reload").load("#cart_reload .cart_content > *");
+      });
+  }
+
+  $("#cart-icon-bubble").click(function(event) {
+    $("#loader").addClass('loader');
+    setTimeout(function(){
+      $("#loader").removeClass("loader");
+    },1000);
+  });
+
+
+</script>

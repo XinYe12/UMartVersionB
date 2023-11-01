@@ -1,0 +1,105 @@
+{{ 'section-slideshow.css' | asset_url | stylesheet_tag }}
+{{ 'flexslider.css' | asset_url | stylesheet_tag }}
+
+<div class="flexslider">
+  <ul class="slides">
+    {%- for block in section.blocks -%}
+      {%- assign block_image = block.settings.image -%}
+      <li>
+        {%- if block_image != blank -%}
+          <img src="{{ block_image | img_url: '1903x' }};">
+        {%- else -%}
+          <div class="{% if block_image == blank %} placeholder{% endif %}">
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+        {%- endif -%}
+        <div class="slideshow-text">
+          {{ block.settings.custom_liquid }}
+
+          {%- if block.settings.button_label != blank -%}
+            <div class="slideshow__btn-wrapper">
+              <a href="{{ block.settings.button_link }}" class="btn slideshow__btn button">
+                {{ block.settings.button_label | escape }}
+              </a>
+            </div>
+          {% endif %}
+
+          <style>
+            .btn.slideshow__btn.button
+            {
+              background-color: {{ block.settings.button_bg_color}};
+              color: {{ block.settings.button_text_color}};
+            }
+          </style>
+        </div>
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
+
+<script src="{{ 'jquery.flexslider.js' | asset_url }}" defer="defer"></script>
+
+<script type="text/javascript" charset="utf-8">
+    $(window).load(function() {
+    $('.flexslider').flexslider({
+      animation: "fade",
+      controlNav: true
+
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.tm-slideshow.name",
+  "tag": "section",
+  "class": "spaced-section slideshow spaced-section--full-width",
+  "blocks": [
+    {
+      "type": "image",
+      "name": "t:sections.tm-slideshow.blocks.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.tm-slideshow.blocks.settings.image.label"
+        },
+        {
+            "type": "liquid",
+            "id": "custom_liquid",
+            "label": "t:sections.tm-slideshow.blocks.settings.custom_liquid.label",
+			"default": "<div class='slideshow__slidetitle'>Various Beans<br> Mix Peas Agriculture Of<br> Natural Food</div><div class='slideshow__subheading'>Up To 50% Off Best Selling At <span>$199.00</span></div>"
+          },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "t:sections.tm-slideshow.blocks.settings.button_label.label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "t:sections.tm-slideshow.blocks.settings.button_link.label"
+        },
+		{
+            "type": "color",
+            "id": "button_bg_color",
+            "default": "#de3248",
+            "label": "t:sections.tm-slideshow.blocks.settings.button_bg_color.label"
+        },
+        {
+            "type": "color",
+            "id": "button_text_color",
+            "default": "#FFFFFF",
+            "label": "t:sections.tm-slideshow.blocks.settings.button_text_color.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.tm-slideshow.presets.name"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,98 @@
+.contact img {
+     max-width: 100%;
+}
+ .Contact-title.title, .contact-info.title {
+	justify-content: left;
+	margin-top: 30px;
+}
+ .site-footer__address .fa {
+	font-size: 19px;
+	color: #000;
+}
+ .site-footer__address .email_content .fa-envelope {
+     font-size: 16px;
+}
+ .site-footer__address span a {
+     color: var(--color-base-accent-2);
+}
+ .site-footer__address span {
+     margin-left: 10px;
+}
+.site-footer__address .time-info.info span {
+	margin-left: 19px;
+}
+ .site-footer__address .info {
+     padding-bottom: 20px;
+     color: var(--color-base-accent-2);
+}
+ .contact-des {
+     padding: 0px 0 15px;
+     color: var(--color-base-accent-2);
+     line-height: 25px;
+}
+ .page-width.contact-page {
+     padding: 0;
+}
+ .contact-us {
+     float: left;
+     width: 100%;
+     margin-top: 20px;
+     margin-bottom: 40px;
+}
+ .contact-us-form {
+     float: left;
+     width: 50%;
+}
+ .contact .field {
+     margin-bottom: 1.5rem;
+}
+.contact-us .contact__button .button {
+	background: var(--color-base-button-background-hover);
+    color: var(--color-base-button-text-hover);
+      width: auto;
+}
+ @media screen and (min-width: 750px) {
+     .contact .field {
+         margin-bottom: 2rem;
+    }
+}
+ .contact__button {
+     margin-top: 3rem;
+}
+ .grecaptcha-badge {
+     visibility: hidden;
+}
+ .map iframe {
+     width: 100%;
+}
+ .site-footer__address {
+     float: left;
+     width: 50%;
+     padding-left: 60px;
+}
+ .contact.page-width--narrow {
+     margin-top: 50px;
+}
+ .footer-content span {
+     padding-left: 10px;
+}
+ @media (max-width: 1269px) {
+     .site-footer__address {
+         padding-left: 30px;
+    }
+}
+ @media (max-width: 989px) {
+     .contact-des {
+         padding: 0 0 20px;
+    }
+}
+ @media (max-width: 749px) {
+     .contact-us-form {
+         width: 100%;
+    }
+     .site-footer__address {
+         width: 100%;
+         padding-left: 0;
+    }
+}
+ 

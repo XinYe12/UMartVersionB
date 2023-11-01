@@ -1,0 +1,407 @@
+<link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-badge.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'template-collection.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>{{ 'component-slider.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'component-price.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'component-badge.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'template-collection.css' | asset_url | stylesheet_tag }}</noscript>
+
+
+{{ 'section-special-collection.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-rating.css' | asset_url | stylesheet_tag }}
+
+
+<div class="collection page-width{% if section.settings.swipe_on_mobile == true and section.settings.collection.all_products_count > 2 and section.settings.products_to_show > 2 %} page-width-desktop{% endif %}">
+    <div class="{% if section.settings.swipe_on_mobile %}title-wrapper-with-link{% endif %}{% if section.settings.title == blank %} title-wrapper-with-link--no-heading{% endif %}{% if section.settings.collection.all_products_count > 2 and section.settings.swipe_on_mobile and section.settings.products_to_show > 2 %} title-wrapper--self-padded-tablet-down{% endif %}">
+       <h2 class="title{% if section.settings.title == blank %} title--no-heading{% endif %}">
+       {{ section.settings.title | escape }}
+       <span>{{ section.settings.desc | escape }}   </span>    
+       </h2>    
+       <div id="offerclock">
+            <div class="time"><span class="day count" id="day">500</span><div class="offertext">{{section.settings.days}}</div></div>
+            <div class="time"><span class="count" id="hour">12</span><div class="offertext">{{section.settings.hour}}</div></div>
+            <div class="time"><span class="minute count" id="minute">12</span><div class="offertext">{{section.settings.min}}</div></div>
+            <div class="time"><span class="second count" id="second">59</span><div class="offertext">{{section.settings.sec}}</div></div>
+       </div>
+    </div>
+  
+
+  {%- liquid
+    assign media_size = section.settings.image_ratio
+    assign show_secondary_image = section.settings.show_secondary_image 
+    assign add_image_padding = section.settings.add_image_padding 
+    assign show_vendor = section.settings.show_vendor
+    assign products_to_display = section.settings.collection.all_products_count
+
+    if section.settings.collection.all_products_count > section.settings.products_to_show
+      assign products_to_display = section.settings.products_to_show
+    endif
+   
+  %}
+
+  <slider-component class="slider-mobile-gutter">
+    <ul class="grid grid--2-col grid--3-col-tablet grid--4-col-desktop grid--5-col-desktop grid--one-third-max grid--quarter-max slider slider--tablet negative-margin" role="list">
+      {%- for product in section.settings.collection.products limit: section.settings.products_to_show -%}
+          <li class="grid__item{% if section.settings.collection.all_products_count > 2 and section.settings.swipe_on_mobile and section.settings.products_to_show > 2 %} slider__slide{% endif %}">
+          <span class="products">
+          <div class="card-wrapper">
+      <div class="card-img">
+        <a href="{{ product.url | default: '#' }}" class="full-unstyled-link">
+          <span class="visually-hidden">{{ product.title | escape }}</span>
+          <div class="card card--product{% if product.featured_media == nil %} card--text-only card--soft{% endif %}" tabindex="-1">
+            <div class="card__inner">
+              {%- if product.featured_media -%}
+                {%- liquid
+                  assign featured_media_aspect_ratio = product.featured_media.aspect_ratio
+
+                  if product.featured_media.aspect_ratio == nil
+                    assign featured_media_aspect_ratio = 1
+                  endif
+                -%}
+
+                <div{% if add_image_padding %} class="card__media-full-spacer"{% endif %}>
+                  <div class="media media--transparent media--{{ media_size }} media--hover-effect"
+                    {% if media_size == 'adapt' and product.featured_media %} style="padding-bottom: {{ 1 | divided_by: featured_media_aspect_ratio | times: 100 }}%;"{% endif %}
+                  >
+                    <img 
+                      src="{{ product.featured_media | img_url: '973x' }}"
+                      alt="{{ product.featured_media.alt | escape }}"
+                      loading="lazy"
+                      class="motion-reduce"
+                      width="{{ product.featured_media.width }}"
+                      height="{{ product.featured_media.height }}"
+                    >
+
+                    {%- if product.media[1] != nil and show_secondary_image -%}
+                      <img 
+                        src="{{ product.media[1] | img_url: '973x' }}"
+                        alt="{{ product.media[1].alt | escape }}"
+                        loading="lazy"
+                        class="motion-reduce"
+                      width="{{ product.media[1].width }}"
+                      height="{{ product.media[1].height }}"
+                      >
+                    {%- endif -%}          
+                  </div>
+                </div>
+              {%- else -%}
+                <div class="card__content"><h2 class="card__text h2">{{ product.title }}</h2></div>
+              {%- endif -%}
+
+
+
+              {%- if product.compare_at_price > product.price and product.available -%}
+                <div class="grid-product__on-sale card__badge">
+                  {% capture saved_amount %}{{ product.compare_at_price | minus: product.price | money_without_trailing_zeros }}{% endcapture %}
+                  {%- assign number1 =  product.compare_at_price | times: 1 -%}
+                  {%- assign number2 =  product.price | times: 1 -%}
+                  {%- assign number3=  number1  | minus: number2  -%}
+                  {%- assign number4=  number3  | times: 100  -%}
+                  {%- assign numberSale =  number4| divided_by: product.compare_at_price -%}
+                  <span class="badge badge--bottom-left" aria-hidden="true">-{{ numberSale }}%</span>
+                </div>
+               {%- endif -%}
+
+            </div>
+          </div>
+
+        </a>
+        
+        <div class="product-hover">
+               {%- render 'button-wishlist-compare', product: product -%}
+          	<div class="quick-view-button"><a class="quick-view cm-link btn--status" data-handle="{{ product.handle }}" href="javascript:void(0);">{% render 'icon-quickview' %}</a></div>           
+             <div data-js-product data-product-handle="{{ product.handle }}"
+                  data-product-variant-id="{{ product.selected_or_first_available_variant.id }}">
+             </div>
+         </div>
+        
+      </div> 
+  
+ 
+  
+  <div class="card-information">
+     <div class="card-information__wrapper">
+        
+        {%- if product.featured_media -%}
+            <span class="card-information__text h5">
+             <a href="{{ product.url | default: '#' }}">
+                {{ product.title | strip_html }}
+             </a>
+            </span>
+         {%- endif -%} 
+        
+        {%- if product.description != blank -%}
+           <div class="product__description rte">
+             {{ product.description | strip_html | truncatewords: 8 }}
+           </div>
+         {%- endif -%}  
+
+        <div class="product__type">
+            <span class="available js-variant-availability">{%- if product.available -%}In Stock{%- else -%}Out Of Stock{%- endif -%}</span>
+         </div>
+        
+        {%- if section.settings.show_rating -%}
+           {%- if product.metafields.reviews.rating.value != blank -%}
+               {% liquid
+                   assign rating_decimal = 0 
+                   assign decimal = product.metafields.reviews.rating.value.rating | modulo: 1 
+                   if decimal >= 0.3 and decimal <= 0.7
+                   assign rating_decimal = 0.5
+                   elsif decimal > 0.7
+                   assign rating_decimal = 1
+                   endif 
+                %}
+             <div class="rating" role="img" aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}">
+               <span aria-hidden="true" class="rating-star color-icon-{{ settings.accent_icons }}" style="--rating: {{ product.metafields.reviews.rating.value.rating | floor }}; --rating-max: {{ product.metafields.reviews.rating.value.scale_max }}; --rating-decimal: {{ rating_decimal }};"></span>
+             </div>
+             {%- else -%}
+             <div class="rating" role="img" aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}">
+               <span aria-hidden="true" class="rating-star-empty color-icon-{{ settings.accent_icons }}" style="--rating: {{ product.metafields.reviews.rating.value.rating | floor }}; --rating-max: {{ product.metafields.reviews.rating.value.scale_max }}; --rating-decimal: {{ rating_decimal }};"></span>
+             </div>
+             {%- endif -%}
+          {%- endif -%}         
+       
+      	 {%- if show_vendor -%}
+          	<span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
+          	<div class="caption-with-letter-spacing light">{{ product.vendor }}</div>
+       	 {%- endif -%}
+        
+           <div class="variant-links">   
+            {%- unless product.has_only_default_variant -%}
+            <variant-radios class="no-js-hidden" data-section="{{ section.id }}" data-url="{{ product.url }}">
+              {%- for option in product.options_with_values -%}
+
+              {%- if option.name == 'Color' -%}
+              <fieldset class="js product-form__input">
+                <legend class="form__label">{{ option.name }}</legend>
+                {%- for value in option.values -%}
+                <a href="{{ product.url | within: collection}}">
+                  <label style="background-color:{{ value }}" for="{{ section.id }}-{{ option.name }}-{{ forloop.index0 }}">
+                    {{ value }}
+                  </label>
+                </a>
+                {%- endfor -%}
+              </fieldset>
+              {%- endif -%}
+
+              {%- endfor -%}
+              <script type="application/json">
+                         {{ product.variants | json }}
+              </script>
+            </variant-radios>
+            {%- endunless -%}
+          </div>
+       
+        {% render 'price', product: product, price_class: '' %}                
+        
+         <product-form class="product-form">
+           {%- form 'product', product, id: product, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+           <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+           <div class="product-form__buttons">
+             {% if product.variants.size == 1 %}
+             <button
+                     type="submit"
+                     name="add"
+                     class="product-form__submit button"
+                     {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %} >
+               {%- if product.selected_or_first_available_variant.available -%}
+               {{ 'products.product.add_to_cart' | t }}
+               {%- else -%}
+               {{ 'products.product.sold_out' | t }}
+               {%- endif -%}
+             </button>
+             {% else %}
+               <a href="{{ product.url | within: collection }}" class="product-form__submit button select-button" title="{{ 'products.product.select_option' | t }}">
+                 {{ 'products.product.select_option' | t }}
+               </a>
+             {% endif %}
+           </div>
+           {%- endform -%}
+         </product-form>
+     
+      </div>
+    </div>    
+</div>
+      </span>
+        </li>
+      {%- else -%}
+        {%- for i in (1..2) -%}
+          <li class="grid__item">
+            {% render 'product-card-placeholder' %}
+          </li>
+        {%- endfor -%}
+      {%- endfor -%}
+    </ul>
+    {%- if section.settings.collection.all_products_count > 2 and section.settings.swipe_on_mobile and section.settings.products_to_show > 2 -%}
+      <div class="slider-buttons no-js-hidden">
+        <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'accessibility.previous_slide' | t }}">{% render 'icon-caret' %}</button>
+        <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'accessibility.next_slide' | t }}">{% render 'icon-caret' %}</button>
+      </div>
+    {%- endif -%}
+  </slider-component>
+</div>
+
+
+<script> 
+   
+// ===================== For Countdown ======================= //
+ 
+  $(document).ready(function() {
+    if($('#offerclock').length > 0){
+        var deadline = new Date("{{section.settings.date_formate}}").getTime(); 
+
+        var x = setInterval(function() { 
+
+        var now = new Date().getTime(); 
+        var t = deadline - now; 
+        var days = Math.floor(t / (1000 * 60 * 60 * 24)); 
+        var hours = Math.floor((t%(1000 * 60 * 60 * 24))/(1000 * 60 * 60)); 
+        var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60)); 
+        var seconds = Math.floor((t % (1000 * 60)) / 1000); 
+        document.getElementById("day").innerHTML =days ; 
+        document.getElementById("hour").innerHTML =hours; 
+        document.getElementById("minute").innerHTML = minutes;  
+        document.getElementById("second").innerHTML =seconds;
+        if (t < 0) { 
+                clearInterval(x); 
+                document.getElementById("offer-date").innerHTML = "TIME UP"; 
+                document.getElementById("day").innerHTML ='0'; 
+                document.getElementById("hour").innerHTML ='0'; 
+                document.getElementById("minute").innerHTML ='0' ;  
+                document.getElementById("second").innerHTML = '0'; } 
+        }, 1000); 
+     }
+  });
+  
+</script>
+
+
+{% schema %}
+{
+  "name": "t:sections.special-collection.name",
+  "tag": "section",
+  "class": "special-products spaced-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Special Offers Of The Week!",
+      "label": "t:sections.special-collection.settings.title.label"
+    },
+    {
+      "type": "text",
+      "id": "desc",
+      "default": "Lorem Ipsum is simply dummy text of the printing and typesetting industry Lorem Ipsum when for scrambled it to make a type specimen book.",
+      "label": "t:sections.special-collection.settings.desc.label"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:sections.special-collection.settings.collection.label"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 10,
+      "label": "t:sections.special-collection.settings.products_to_show.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "swipe_on_mobile",
+      "default": true,
+      "label": "t:sections.special-collection.settings.swipe_on_mobile.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.special-collection.settings.header.content"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.special-collection.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.special-collection.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.special-collection.settings.image_ratio.options__3.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.special-collection.settings.image_ratio.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": true,
+      "label": "t:sections.special-collection.settings.show_secondary_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "add_image_padding",
+      "default": false,
+      "label": "t:sections.special-collection.settings.add_image_padding.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "t:sections.special-collection.settings.show_vendor.label"
+    }, 
+    {
+      "type": "text",
+      "id": "days",
+      "default": "Days",
+      "label": "t:sections.special-collection.settings.days.label"
+    },
+    {
+      "type": "text",
+      "id": "hour",
+      "default": "Hours",
+      "label": "t:sections.special-collection.settings.hour.label"
+    },
+	{
+      "type": "text",
+      "id": "min",
+      "default": "Minutes",
+      "label": "t:sections.special-collection.settings.min.label"
+    },
+	{
+      "type": "text",
+      "id": "sec",
+      "default": "Seconds",
+      "label": "t:sections.special-collection.settings.sec.label"
+    },
+    {
+      "type": "text",
+      "id": "date_formate",
+      "default": "2026,09,25 15:37:25",
+      "label": "t:sections.special-collection.settings.date_formate.label",
+      "info": "t:sections.special-collection.settings.date_formate.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": true,
+      "label": "t:sections.featured-collection.settings.show_rating.label",
+      "info": "t:sections.featured-collection.settings.show_rating.info"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.special-collection.presets.name"
+    }
+  ]
+}
+{% endschema %}

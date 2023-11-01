@@ -1,0 +1,72 @@
+{% if template != 'index' %}
+<nav class="category_box side-box" id="CategoryBox" role="categorybox">
+ 	<h3 class="box-heading">{{ section.settings.categories_title | escape }}</h3>
+	<ul class="site-cat box-content" id="SiteCat">
+      {% for link in linklists[section.settings.side-categories].links %}
+        {%- assign child_list_handle = link.title | handleize -%}
+
+        {% if linklists[child_list_handle].links != blank %}
+          <li class="site-cat--has-dropdown{% if link.active %} site-cat--active{% endif %}">
+            <a href="{{ link.url }}" class="site-cat__link site-cat__link--main" aria-has-popup="true" aria-expanded="false" aria-controls="SitecatLabel-{{ child_list_handle }}">
+              {{ link.title }}        
+            </a>
+            <div class="site-nav__dropdown{% if three_level_nav %} site-nav__dropdown--centered{% endif %}" id="SiteNavLabel-{{ child_list_handle }}" aria-expanded="false">          
+                <div class="site-nav__childlist">
+                  <ul class="site-nav__childlist-grid">
+                    {% if linklists[child_list_handle].links != blank %}
+                      {% for childlink in linklists[child_list_handle].links %}
+                        {% assign grand_child_list_handle = childlink.title | handle %}	
+                        {% if linklists[grand_child_list_handle].links != blank %}
+                            <li class="site-nav__childlist-item site-nav__childlist-item-dropdown">
+                              <a href="{{ childlink.url }}" class="site-nav__link site-nav__child-link site-nav__child-link--parent">{{ childlink.title | escape }}</a>
+                              <ul class="grand-child-has-dropdown">
+                                {% for grandchildlink in linklists[grand_child_list_handle].links %}
+                                    <li>
+                                      <a href="{{ grandchildlink.url }}" class="site-nav__link site-nav__child-link">{{ grandchildlink.title | escape }}</a>
+                                    </li> 
+                                {% endfor %}
+                              </ul>
+                            </li>
+                         {% else %}
+                            <li class="site-nav__childlist-item">
+                                <a href="{{ childlink.url }}" class="site-nav__link site-nav__child-link site-nav__child-link--parent">{{ childlink.title | escape }}</a>
+                            </li>
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                  </ul>
+                </div>
+            </div>
+          </li>
+        {% else %}
+          <li {% if link.active %}class="site-cat--active"{% endif %}>
+            <a href="{{ link.url }}" class="site-cat__link site-cat__link--main">{{ link.title }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+  	</ul>
+</nav>
+{% endif %}
+
+
+<script>
+  function mobileToggleMenu10() {
+    $(".side-bar #CategoryBox  ul#SiteCat > li.site-cat--has-dropdown").append("<span class='mobile_togglemenu'> </span>");
+    $(".side-bar #CategoryBox  ul#SiteCat > li.site-cat--has-dropdown").addClass('toggle');
+    $(".side-bar #CategoryBox  ul#SiteCat > li.site-cat--has-dropdown .mobile_togglemenu").click(function() {
+        $(this).parent().toggleClass('active').find('.site-nav__dropdown').slideToggle('slow')
+    })
+}
+$(document).ready(mobileToggleMenu10);
+  
+  function mobileToggleMenu11() {
+    $(".side-bar #CategoryBox  ul#SiteCat  li.site-cat--has-dropdown .site-nav__childlist-item-dropdown").append("<span class='mobile_togglemenu'> </span>");
+    $(".side-bar #CategoryBox  ul#SiteCat li.site-cat--has-dropdown .site-nav__childlist-item-dropdown").addClass('toggle');
+    $(".side-bar #CategoryBox  ul#SiteCat li.site-cat--has-dropdown .site-nav__childlist-item-dropdown .mobile_togglemenu").click(function() {
+        $(this).parent().toggleClass('active').find('.grand-child-has-dropdown').slideToggle('slow')
+    })
+}
+$(document).ready(mobileToggleMenu11);
+  </script>
+
+

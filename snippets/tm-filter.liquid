@@ -1,0 +1,169 @@
+<div class="filter-total side-box">      
+  <div class="facets-container">
+ <facet-filters-form class="facets small-hide">
+   <form id="FacetFiltersForm" class="facets__form">
+
+        {%- if results.terms -%}
+          <input type="hidden" name="q" value="{{ results.terms | escape }}">
+          <input name="options[prefix]" type="hidden" value="last">
+        {%- endif -%}
+		<div class="FacetsWrapperDesktop">
+            {%- unless results.filters == empty -%}
+              <h3 class="box-heading">{{ 'sections.collection_template.filter_by_label' | t }}</h3>
+            {%- endunless -%}
+
+			<div class="box-content">
+            {%- for filter in collection.filters -%}
+              {%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
+              {% case filter.type %}
+              {% when 'list' %}
+                <div class="disclosure-has-popup facets__disclosure js-filter" data-index="{{ forloop.index }}">
+                  <summary class="facets__summary">
+                    <div>
+                      <span class="filter-title">{{ filter.label | escape }}</span>
+                      <span class="count-bubble">{%- if filter.active_values.size > 0 -%}{{ filter.active_values.size }}{%- endif -%}</span>
+                      		{% render 'icon-caret' %}
+                    </div>
+                  </summary>
+                  <div class="facets__display">
+                <div class="facets__header">
+                      <span class="facets__selected no-js-hidden">{{ 'sections.collection_template.filters_selected' | t: count: filter.active_values.size }}</span>
+                      <a href="{{ filter.url_to_remove }}" class="facets__reset link underlined-link js-facet-remove" >{{ 'sections.collection_template.reset' | t }}</a>
+                    </div>
+
+                    <ul class="facets__list list-unstyled" role="list">
+                      {%- for value in filter.values -%}
+                       <li class="list-menu__item facets__item" id="{{ filter.label }}">
+                          {% if value.param_name == 'filter.v.option.color' %}
+                  		<div class="filter-variant-color">
+                     {% endif %}
+                    {% if value.param_name == 'filter.v.option.color' %}
+                     <label for="Filter-{{ filter.label | escape }}-{{ forloop.index }}" class="facet-checkbox{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}">
+                        <input type="checkbox"
+                          name="{{ value.param_name }}"
+                          value="{{ value.value }}"
+                          id="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                          {% if value.active %}checked{% endif %}
+                          {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                        >
+
+
+                        <span class="color-lable" style="background-color: {{ value.label | escape }}"> 
+                       </span>
+                      </label>
+                            {%- else -%}
+                            <label for="Filter-{{ filter.label | escape }}-{{ forloop.index }}" class="facet-checkbox{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}">
+                                <input type="checkbox"
+                                  name="{{ value.param_name }}"
+                                  value="{{ value.value }}"
+                                  id="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                                  {% if value.active %}checked{% endif %}
+                                  {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                                >
+    
+                                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                                  <rect width="16" height="16" stroke="currentColor" fill="none" stroke-width="1"></rect>
+                                </svg>
+    
+                                <svg class="icon icon-checkmark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 9" fill="none" width="10px" height="10px">
+                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M11.35.643a.5.5 0 01.006.707l-6.77 6.886a.5.5 0 01-.719-.006L.638 4.845a.5.5 0 11.724-.69l2.872 3.011 6.41-6.517a.5.5 0 01.707-.006h-.001z" fill="currentColor"/>
+                                </svg>
+                                {{ value.label | escape }} ({{ value.count }})
+                              </label>
+                           {%- endif -%}
+                          {% if value.param_name == 'filter.v.option.color' %}
+                          </div>
+                     {% endif %}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              {% when 'price_range' %}
+                {% liquid
+                  assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,TRY,UYU,VES,VND' | split: ','
+                  assign uses_comma_decimals = false
+                  if currencies_using_comma_decimals contains cart.currency.iso_code
+                    assign uses_comma_decimals = true
+                  endif
+                %}
+                <div class="disclosure-has-popup facets__disclosure js-filter" data-index="{{ forloop.index }}">
+                  <summary class="facets__summary">
+                    <div>
+                      <span class="filter-title">{{ filter.label | escape }}</span>
+                      <span class="count-bubble{%- if filter.min_value.value or filter.max_value.value -%}{{ filter.active_values.size }} count-bubble--dot{% endif %}"></span>
+                      {% render 'icon-caret' %}
+                    </div>
+                  </summary>
+                  <div class="facets__display">
+                    {%- assign max_price_amount = filter.range_max | money | escape -%}
+                    <price-range class="facets__price">
+                      <div class="field">
+                        <span class="field__currency">{{ cart.currency.symbol }}</span>
+                        <input class="field__input"
+                          name="{{ filter.min_value.param_name }}"
+                          id="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                          {%- if filter.min_value.value -%}
+                            {%- if uses_comma_decimals -%}
+                              value="{{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                            {%- else -%}
+                              value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                            {% endif %}
+                          {%- endif -%}
+                          type="number"
+                          placeholder="0"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}">
+                        </input>
+                        <label class="field__label" for="Search-In-Modal">{{ 'sections.collection_template.from' | t }}</label>
+                      </div>
+                      <div class="field">
+                        <span class="field__currency">{{ cart.currency.symbol }}</span>
+                        <input class="field__input"
+                          name="{{ filter.max_value.param_name }}"
+                          id="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                          {%- if filter.max_value.value -%}
+                            {%- if uses_comma_decimals -%}
+                              value="{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                            {%- else -%}
+                              value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                            {% endif %}
+                          {%- endif -%}
+                          type="number"
+                          placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}">
+                        </input>
+                        <label class="field__label" for="Search-In-Modal">{{ 'sections.collection_template.to' | t }}</label>
+                      </div>
+                    </div>
+                  </price-range>
+                </div>
+              {% endcase %}
+            {%- endfor -%}
+            <noscript>
+              <button type="submit" class="facets__button button">{{ 'sections.collection_template.filter_button' | t }}</button>
+            </noscript>
+   			</div>
+
+          </div>
+    <div class="facet-filters sorting">
+            <div class="facet-filters__field">
+              <h2 class="facet-filters__label caption-large text-body">
+                <label for="SortBy">{{ 'products.facets.sort_by_label' | t }}</label>
+              </h2>
+              <div class="select">
+                {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                <select name="sort_by" class="facet-filters__sort select__select" id="SortBy" aria-describedby="a11y-refresh-page-message">
+                  {%- for option in collection.sort_options -%}
+                    <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected="selected"{% endif %}>{{ option.name | escape }}</option>
+                  {%- endfor -%}
+                </select>
+                {% render 'icon-caret' %}
+              </div>
+            </div>
+          </div>
+      </form>
+    </facet-filters-form>
+</div>
+</div>

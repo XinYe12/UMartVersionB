@@ -1,0 +1,58 @@
+
+  .quantity-button-sidecart{
+    color: #000000; /* Text color */
+    border: #000000; /* Remove border */
+    border-radius: 5px; /* Add rounded corners */
+    cursor: pointer; /* Show a pointer cursor on hover */
+  }
+  [id^="change-quantity-button-"] {
+    background-color: #c5ffd0;
+    margin-right: 8px;      
+  }
+  [id^="change-quantity-button-"]:hover{
+    background-color: #25ad3e;      
+  }
+  [id^="delete-quantity-button-"]{
+    background-color: #ffc5c5;
+    margin-right: 8px;      
+
+  }
+  [id^="delete-quantity-button-"]:hover{
+    background-color: #d72626;
+  }
+  .xsymbol{
+    margin-right: 8px;
+  }
+  .product-item__price {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .quantity-buttons {
+    display: flex;
+  }
+  
+  .quantity-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  [id^="current-quantity-"]{
+    margin-right: 8px;
+  }
+  .quantity-container {
+    display: flex;
+    align-items: center;
+  }
+  [id^="realtime-quantity-"]{
+
+    position: relative;
+    margin-right: 8px;
+    border-color: transparent;
+    font-weight: bold;
+    color: #378015;
+    border-radius: 5px;
+    
+  }
+  
+

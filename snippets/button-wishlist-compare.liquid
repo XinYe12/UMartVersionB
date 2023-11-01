@@ -1,0 +1,19 @@
+{% comment %}
+  Shopify Wishlist
+  Usage:
+    - Markup: {%- render 'button-wishlist-compare', product: product -%}
+    - Place this snippet inside your existing product card snippet
+
+  Parameters:
+    - product: <Shopify product> (required)
+{% endcomment %}
+{%- if product.handle != blank -%}
+  <button type="button" aria-label="Add to wishlist" class="cm-link btn--status" button-wishlist data-product-handle="{{ product.handle }}">
+    {%- render 'icon-cmheart' -%}
+    {% render 'icon-solidheart' %}
+  </button>
+  <button type="button" aria-label="Add to compare" class="cm-link btn--status" button-compare data-product-handle="{{ product.handle }}">
+    {%- render 'icon-cmcompare' -%}
+    {% render 'icon-addcompare' %}
+  </button>
+{%- endif -%}
