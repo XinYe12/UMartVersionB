@@ -1,0 +1,44 @@
+<div class="images-column">
+<div class="qv-product-images"></div>
+<div class="qv-product-images-variant"></div>
+</div>
+<div class="qv-content">
+   <div class="holder">
+      <h1 class="qv-product-title"></h1>     
+      <div class="qv-price">
+         <div class="price-current">
+            <div class="price-currency">{{ cart.currency.symbol }}</div>
+            <div class="qv-product-price"></div>
+         </div>
+         <div class="original-price">
+            <div class="price-currency">{{ cart.currency.symbol }}</div>
+            <div class="qv-product-original-price"></div>
+         </div>
+      </div>
+      <div class="qv-product-description"></div>
+      <div class="qv-info">
+         <div class="qv-product-type-title">
+            <span class="product-type">{{ 'accessibility.product_type' | t }}</span>:
+            <span class="qv-product-type"></span>
+         </div>
+         <div class="qv-view-vendor-title">
+            <span class="product-vendor_name">{{ 'accessibility.vendor' | t }}</span>:
+            <span class="qv-view-vendor"></span>
+         </div>
+         <div class="qv-sku">
+            <span class="sku-name">{{ 'accessibility.sku' | t }}</span>:
+            <span class="qv-view-sku"></span>
+         </div>
+      </div>
+      <div class="qv-add-to-cart">
+         <div class="qv-product-options"></div>
+         <div class="quantity-qv">
+            <span>{{ 'products.product.quantity.label' | t }}</span>
+            <input type="number" class="qv-quantity" value="1" min="1">
+         </div>
+         <input type="submit" class="qv-add-button button" value="{{ 'products.product.add_to_cart' | t }}">
+      </div>
+      <a class="view-product" href=""><span>{{ 'accessibility.product_details' | t }}</span></a>
+   </div>
+</div>
+

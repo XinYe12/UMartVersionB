@@ -1,0 +1,488 @@
+<link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-badge.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'template-collection.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>{{ 'component-slider.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'component-price.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'component-badge.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'template-collection.css' | asset_url | stylesheet_tag }}</noscript>
+
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-rating.css' | asset_url | stylesheet_tag }}
+
+<div data-section-id="{{ section.id }}" data-section-type="product_tab-section">
+	<div class="product_tab-block verticaltab">
+		<div class="page-width">                                
+            <div class="collection-header-text">
+              <div class="title-wrapper-with-link{% if section.settings.title == blank %} title-wrapper-with-link--no-heading{% endif %}{% if section.settings.collection.all_products_count > 2 and section.settings.swipe_on_mobile and section.settings.products_to_show > 2 %} title-wrapper--self-padded-tablet-down{% endif %}">
+                <h2 class="title{% if section.settings.title == blank %} title--no-heading{% endif %}">{{ section.settings.title | escape }}</h2>
+               </div>               
+            </div>
+           <div class="tab-left-part">
+           <ul class="tabs">
+                    {%- assign i = 1 -%}
+                    {% for block in section.blocks %}
+                        {% if block.type == 'slider' %}
+                            <li><a href="#vtab--{{ i }}">{{ block.settings.title1 | escape }}</a></li>
+                        {% endif %}
+                        {% if block.type == 'grid' %}
+                            <li><a href="#vtab--{{ i }}">{{ block.settings.title2 | escape }}</a></li>
+                        {% endif %}
+                        {%- assign i = i | plus:1 -%}
+                    {% endfor %}
+                </ul>
+       	    </div>
+        	<div class="tabs-holder tab-right-part">
+          		{%- assign i = 1 -%}
+          			{% for block in section.blocks %}
+              			{% if block.type == 'slider' %}
+              				<div id="vtab--{{ i }}" class="tabs-content">
+                        		<div class="product-collection-tab-slider">
+                       				{%- assign collection = collections[block.settings.collection] -%}
+                        			<div class="collection">
+                          				<slider-component class="slider-mobile-gutter">
+                         					<ul class="grid grid--2-col grid--3-col-tablet grid--one-third-max grid--4-col-desktop grid--5-col-desktop grid--quarter-max slider slider--tablet negative-margin" role="list">
+          										{%- for product in collection.products -%}
+            										<li class="grid__item slider__slide">
+               											<span class="products">
+                          									<div class="card-wrapper">
+           														{%- if product.featured_media -%}
+                                                                    {%- liquid
+                                                                      assign featured_media_aspect_ratio = product.featured_media.aspect_ratio
+                                                                     if product.featured_media.aspect_ratio == nil
+                                                                        assign featured_media_aspect_ratio = 1
+                                                                      endif
+                                                                    -%}
+                            										<div class="card-img">
+  																		<a href="{{ product.url | default: '#' }}" class="full-unstyled-link">
+    																		<span class="visually-hidden">{{ product.title | escape }}</span>
+     																		<div class="card card--product{% if product.featured_media == nil %} card--text-only card--soft{% endif %}" tabindex="-1">
+                            													<div class="media media--transparent media--adapt media--hover-effect" style="padding-bottom: {{ 1 | divided_by: featured_media_aspect_ratio | times: 100 }}%;">
+                                                                                    <img 
+                                                                                      src="{{ product.featured_media | img_url: '1044x' }}"
+                                                                                      alt="{{ product.featured_media.alt | escape }}"
+                                                                                      loading="lazy"
+                                                                                      class="motion-reduce"
+                                                                                    >
+                                                                                    {%- if product.media[1] != nil -%}
+                                                                                        <img 
+                                                                                          src="{{ product.media[1] | img_url: '1044x' }}"
+                                                                                          alt="{{ product_card_product.media[1].alt | escape }}"
+                                                                                          loading="lazy"
+                                                                                          class="motion-reduce"
+
+                                                                                        >
+              																		{%- endif -%} 
+                                                                              	</div>
+               																	{%- if product.compare_at_price > product.price and product.available -%}
+                                                                                    <div class="grid-product__on-sale card__badge">
+                                                                                      {% capture saved_amount %}{{ product.compare_at_price | minus: product.price | money_without_trailing_zeros }}{% endcapture %}
+                                                                                      {%- assign number1 =  product.compare_at_price | times: 1 -%}
+                                                                                      {%- assign number2 =  product.price | times: 1 -%}
+                                                                                      {%- assign number3=  number1  | minus: number2  -%}
+                                                                                      {%- assign number4=  number3  | times: 100  -%}
+                                                                                      {%- assign numberSale =  number4| divided_by: product.compare_at_price -%}
+                                                                                      <span class="badge badge--bottom-left" aria-hidden="true">-{{ numberSale }}%</span>
+                                                                                    </div>
+                                                                              	{%- endif -%}
+    																		</div>
+             															</a>
+                             										</div>
+                            										
+                                 									<div class="product-hover">
+                                                                       {%- render 'button-wishlist-compare', product: product -%}
+                                                                            <div class="quick-view-button"><a class="quick-view cm-link btn--status" data-handle="{{ product.handle }}" href="javascript:void(0);">{% render 'icon-quickview' %}</a></div>
+                                                                      	<div data-js-product data-product-handle="{{ product.handle }}"
+                                                                          data-product-variant-id="{{ product.selected_or_first_available_variant.id }}">
+                                                                     	</div>
+                                                                     
+         															</div>
+                              										<div class="card-information">
+     																	<div class="card-information__wrapper">
+                                                                 
+                                                                            {%- if product.featured_media -%}
+                                                                            <span class="card-information__text h5">
+                                                                              <a href="{{ product.url | default: '#' }}">
+                                                                                {{ product.title | strip_html | truncatewords: 15 }}
+                                                                              </a>
+                                                                            </span>
+                                                                            {%- endif -%}
+                                                                  
+                                                                 <div class="product__type">
+                                                                	 <span class="available js-variant-availability">{%- if product.available -%}In Stock{%- else -%}<span class="out-of-stock">Out Of Stock{%- endif -%}</span>
+                                                                 </div>
+                                                                  
+                                                                  {%- if section.settings.show_rating -%}
+                                                                    {%- if product.metafields.reviews.rating.value != blank -%}
+                                                                    {% liquid
+                                                                      assign rating_decimal = 0 
+                                                                      assign decimal = product.metafields.reviews.rating.value.rating | modulo: 1 
+                                                                      if decimal >= 0.3 and decimal <= 0.7
+                                                                        assign rating_decimal = 0.5
+                                                                      elsif decimal > 0.7
+                                                                        assign rating_decimal = 1
+                                                                      endif 
+                                                                    %}
+                                                                    <div class="rating" role="img" aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}">
+                                                                      <span aria-hidden="true" class="rating-star color-icon-{{ settings.accent_icons }}" style="--rating: {{ product.metafields.reviews.rating.value.rating | floor }}; --rating-max: {{ product.metafields.reviews.rating.value.scale_max }}; --rating-decimal: {{ rating_decimal }};"></span>
+                                                                    {% comment %}<p class="rating-count">
+                                                                      <span class="visually-hidden">({{ product.metafields.reviews.rating_count }})</span>
+                                                                      <span aria-hidden="true">({{ product.metafields.reviews.rating_count }} {{ "accessibility.total_reviews" | t }})</span>
+                                                                    </p>{% endcomment %}
+                                                                    </div>
+
+                                                            {%- else -%}
+
+                                                            <div class="rating" role="img" aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}">
+                                                               <span aria-hidden="true" class="rating-star-empty color-icon-{{ settings.accent_icons }}" style="--rating: {{ product.metafields.reviews.rating.value.rating | floor }}; --rating-max: {{ product.metafields.reviews.rating.value.scale_max }}; --rating-decimal: {{ rating_decimal }};"></span>
+                                                            {% comment %} <p class="rating-count">
+                                                               <span class="visually-hidden">({{ product.metafields.reviews.rating_count }})</span>
+                                                               <span aria-hidden="true">({{ product.metafields.reviews.rating_count }} {{ "accessibility.no_reviews" | t }})</span>
+                                                             </p>{% endcomment %}
+                                                             </div>
+                                                          {%- endif -%}
+                                                          {%- endif -%}
+                                                                            {% comment %} TODO: metafield {% endcomment %}
+                                                                          
+        																	<span class="caption-large light">{{ product.description | strip_html | truncatewords: 20 }}</span>
+        																	{% render 'price', product: product, price_class: '' %}
+                                                                          <div class="product-hover-info">  
+                                                                          	<product-form class="product-form">
+                                                                              {%- form 'product', product, id: product, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+                                                                              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                                                                              <div class="product-form__buttons">
+                                                                                {% if product.variants.size == 1 %}
+                                                                                <button
+                                                                                        type="submit"
+                                                                                        name="add"
+                                                                                        class="product-form__submit button"
+                                                                                        {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %} >
+                                                                                  {%- if product.selected_or_first_available_variant.available -%}
+                                                                                  {{ 'products.product.add_to_cart' | t }}
+                                                                                  {%- else -%}
+                                                                                  {{ 'products.product.sold_out' | t }}
+                                                                                  {%- endif -%}
+                                                                                </button>
+                                                                                {% else %}
+                                                                                <a href="{{ product.url | within: collection }}" class=" product-form__submit button select-button" title="{{ 'products.product.select_option' | t }}">
+                                                                                  {{ 'products.product.select_option' | t }}
+                                                                                </a>
+                                                                                {% endif %}
+                                                                              </div>
+                                                                              {%- endform -%}
+                                                                            </product-form>
+                                                                          <div class="sca-qv-button-wrap"><a class="sca-qv-button"  href="#sca-qv-showqv"title="Quick View" handle="{{product.handle}}" ></a></div>
+      																	</div>
+                                                                      </div> 
+    																</div>  
+                            									{% endif %}
+            												</div>
+              											</span>
+            										</li>
+                                                      {%- else -%}
+                                                      {%- for i in (1..5) -%}
+                                                        <li class="grid__item">
+                                                          <span class="products">
+                                                          {% render 'product-card-placeholder' %}
+                                                           </span>
+                                                        </li>
+                                                      {%- endfor -%}
+          										{%- endfor -%}
+        									</ul>
+                                            <div class="slider-buttons">
+                                              <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'accessibility.previous_slide' | t }}">{% render 'icon-caret' %}</button>
+                                              <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'accessibility.next_slide' | t }}">{% render 'icon-caret' %}</button>
+                                            </div>
+                             			</slider-component>
+                       				</div>
+                              	</div>
+                      		
+              			</div> 
+              		{% endif %}
+        			{%- assign i = i | plus:1 -%}
+          		{% endfor %}
+        		{%- assign i = 1 -%}
+          		{% for block in section.blocks %}
+              		{% if block.type == 'grid' %}
+              			<div id="vtab--{{ i }}" class="product-grid">
+                      			{%- assign collection = collections[block.settings.collection] -%}
+                  	  			<div class="product_block">
+                          			<div id="products_grid" class="grid--uniform grid--view-items product-item-grid">
+                                        <ul id="main-collection-product-grid" data-id="{{ section.id }}" class="grid grid--2-col grid--3-col-tablet grid--one-third-max grid--4-col-desktop grid--5-col-desktop grid--quarter-max negative-margin">
+          								{% paginate collection.products by 10 %}		
+                                          {%- for product in collection.products -%}
+            									<li class="grid__item">
+                                                  <span class="products">
+                          							<div class="card-wrapper">
+														{%- if product.featured_media -%}
+                                                            {%- liquid
+                                                              assign featured_media_aspect_ratio = product.featured_media.aspect_ratio
+                                                              if product.featured_media.aspect_ratio == nil
+                                                                assign featured_media_aspect_ratio = 1
+                                                              endif
+                                                            -%}
+                            								<div class="card-img">
+  																<a href="{{ product.url | default: '#' }}" class="full-unstyled-link">
+    																<span class="visually-hidden">{{ product.title | escape }}</span>
+     																<div class="card card--product{% if product.featured_media == nil %} card--text-only card--soft{% endif %}" tabindex="-1">
+                                                                        <div{% if add_image_padding %} class="card__media-full-spacer"{% endif %}>
+                                                                            <div class="media media--transparent media--adapt media--hover-effect" style="padding-bottom: {{ 1 | divided_by: featured_media_aspect_ratio | times: 100 }}%;">
+                                                                                <img 
+                                                                                  src="{{ product.featured_media | img_url: '1044x' }}"
+                                                                                  alt="{{ product.featured_media.alt | escape }}"
+                                                                                  loading="lazy"
+                                                                                  class="motion-reduce"
+                                                                                >
+                                                                                {%- if product.media[1] != nil -%}
+                                                                                    <img 
+                                                                                      src="{{ product.media[1] | img_url: '1044x' }}"
+                                                                                      alt="{{ product_card_product.media[1].alt | escape }}"
+                                                                                      loading="lazy"
+                                                                                      class="motion-reduce"
+
+                                                                                    >
+                                                                                {%- endif -%} 
+                                                                            </div>                            
+                                                                        </div>
+                                                                        {%- if product.compare_at_price > product.price and product.available -%}
+                                                                            <div class="grid-product__on-sale card__badge">
+                                                                              {% capture saved_amount %}{{ product.compare_at_price | minus: product.price | money_without_trailing_zeros }}{% endcapture %}
+                                                                              {%- assign number1 =  product.compare_at_price | times: 1 -%}
+                                                                              {%- assign number2 =  product.price | times: 1 -%}
+                                                                              {%- assign number3=  number1  | minus: number2  -%}
+                                                                              {%- assign number4=  number3  | times: 100  -%}
+                                                                              {%- assign numberSale =  number4| divided_by: product.compare_at_price -%}
+                                                                              <span class="badge badge--bottom-left" aria-hidden="true">-{{ numberSale }}%</span>
+                                                                            </div>
+                                                                        {%- endif -%}
+    																</div>
+              													</a>
+                                                      		</div>    
+               												
+     															<div class="product-hover">
+                                                                  {%- render 'button-wishlist-compare', product: product -%}
+                                                                        <div class="quick-view-button"><a class="quick-view cm-link btn--status" data-handle="{{ product.handle }}" href="javascript:void(0);">{% render 'icon-quickview' %}</a></div>
+                                                                    <div data-js-product data-product-handle="{{ product.handle }}"
+                                                                    data-product-variant-id="{{ product.selected_or_first_available_variant.id }}">
+           															</div>
+                                                                  {%- render 'button-wishlist-compare', product: product -%}
+         														</div>                         
+     															<div class="card-information">
+     																<div class="card-information__wrapper">
+                                                                        {%- if section.settings.show_rating -%}
+                                                                          {%- if product.metafields.reviews.rating.value != blank -%}
+                                                                          {% liquid
+                                                                            assign rating_decimal = 0 
+                                                                            assign decimal = product.metafields.reviews.rating.value.rating | modulo: 1 
+                                                                            if decimal >= 0.3 and decimal <= 0.7
+                                                                              assign rating_decimal = 0.5
+                                                                            elsif decimal > 0.7
+                                                                              assign rating_decimal = 1
+                                                                            endif 
+                                                                          %}
+                                                                          <div class="rating" role="img" aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}">
+                                                                            <span aria-hidden="true" class="rating-star color-icon-{{ settings.accent_icons }}" style="--rating: {{ product.metafields.reviews.rating.value.rating | floor }}; --rating-max: {{ product.metafields.reviews.rating.value.scale_max }}; --rating-decimal: {{ rating_decimal }};"></span>
+                                                                          <p class="rating-count">
+                                                                            <span class="visually-hidden">({{ product.metafields.reviews.rating_count }})</span>
+                                                                            <span aria-hidden="true">({{ product.metafields.reviews.rating_count }} {{ "accessibility.total_reviews" | t }})</span>
+                                                                          </p>
+                                                                          </div>
+                                                                  
+                                                                  {%- else -%}
+                                                                         
+                                                                  <div class="rating" role="img" aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}">
+                                                                     <span aria-hidden="true" class="rating-star-empty color-icon-{{ settings.accent_icons }}" style="--rating: {{ product.metafields.reviews.rating.value.rating | floor }}; --rating-max: {{ product.metafields.reviews.rating.value.scale_max }}; --rating-decimal: {{ rating_decimal }};"></span>
+                                                                   <p class="rating-count">
+                                                                     <span class="visually-hidden">({{ product.metafields.reviews.rating_count }})</span>
+                                                                     <span aria-hidden="true">({{ product.metafields.reviews.rating_count }} {{ "accessibility.no_reviews" | t }})</span>
+                                                                   </p>
+                                                                   </div>
+                                                                  
+                                                                        {%- endif -%}
+                                                                        {%- endif -%}
+																		{%- if product.featured_media -%}
+            																<span class="card-information__text h5">
+                                                                               <a href="{{ product.url | default: '#' }}">
+                                                                                  {{ product.title | escape }}
+                                                                               </a>
+            																</span>
+                                                                      	{%- endif -%}
+        																{% comment %} TODO: metafield {% endcomment %}
+        																<span class="caption-large light">{{ product.description | strip_html | truncatewords: 20 }}</span>
+        																{% render 'price', product: product, price_class: '' %}       
+                                                                        <div class="product-hover-info">
+                                                                          <product-form class="product-form">
+                                                                            {%- form 'product', product, id: product, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+                                                                            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                                                                            <div class="product-form__buttons">
+                                                                              {% if product.variants.size == 1 %}
+                                                                                <button
+                                                                                        type="submit"
+                                                                                        name="add"
+                                                                                        class="product-form__submit button"
+                                                                                        {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %} >
+                                                                                  {%- if product.selected_or_first_available_variant.available -%}
+                                                                                  {{ 'products.product.add_to_cart' | t }}
+                                                                                  {%- else -%}
+                                                                                  {{ 'products.product.sold_out' | t }}
+                                                                                  {%- endif -%}
+                                                                                </button>
+                                                                              {% else %}
+
+                                                                                  <a href="{{ product.url | within: collection }}" class=" product-form__submit button select-button" title="{{ 'products.product.select_option' | t }}">
+                                                                                    {{ 'products.product.select_option' | t }}
+                                                                                  </a>
+
+                                                                              {% endif %}
+                                                                            </div>
+                                                                            {%- endform -%}
+                                                                          </product-form>
+                                                                      	<div class="sca-qv-button-wrap"><a class="sca-qv-button"  href="#sca-qv-showqv"title="Quick View" handle="{{product.handle}}" ></a></div>
+                                                                      </div>
+                                                                    </div>
+    															</div>  
+                            							{% endif %}
+            										</div>
+                                                  </span> 
+                                          		</li>
+                                          {%- else -%}
+                                                  {%- for i in (1..5) -%}
+                                                    <li class="grid__item">
+                                                      <span class="products">
+                                                      {% render 'product-card-placeholder' %}
+                                                       </span>
+                                                    </li>
+                                                  {%- endfor -%}
+          									{%- endfor -%}
+                                           {% endpaginate %}
+                                      	</ul>
+                          			</div>
+                                    {%- assign count_products = 0 -%}
+                                  {%- for product in collection.products -%}
+
+                                           {%- assign count_products = count_products | plus:1 -%}
+
+                                  {%- endfor -%}
+                                  {% if count_products >= 10 %}
+                                   <div class="viewmore">
+                                     <a class="button viewmore__btn" href="{{ block.settings.button_link }}">
+                                          {{  block.settings.button_label }}
+                                     </a>
+                                   </div>
+                                  {% endif %}
+                       			</div>           
+              			</div>
+              		{% endif %}
+      				{%- assign i = i | plus:1 -%}
+          		{% endfor %}
+       		</div>
+  		</div>
+</div>
+<script>
+	//====================== collection tab =======================//
+$(document).ready(function() {
+    $('.product_tab-block.verticaltab ul.tabs').each(function(){
+      var active, content, links = $(this).find('li');
+      active = links.first().addClass('active');
+      content = $(active.attr('href'));
+      links.not(':first').each(function () {
+        $($(this).attr('href')).hide();
+      });
+      $(this).find('a').click(function(e){
+        active.removeClass('active');
+        content.hide();
+        active = $(this);
+        content = $($(this).attr('href'));
+        active.addClass('active');
+        content.show();
+        return false;
+      });
+    });
+  });
+</script>
+
+{% schema %}
+  {
+    "name": "t:sections.tm-verticaltab_collection.name",
+	"tag": "section",
+	"class": "spaced-section",
+	"max_blocks": 9,
+  	"settings": [
+      {
+      "type": "text",
+      "id": "title",
+      "default": "Shop By Categories",
+      "label": "t:sections.tm-verticaltab_collection.settings.title.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": true,
+      "label": "t:sections.tm-verticaltab_collection.settings.show_rating.label",
+      "info": "t:sections.tm-verticaltab_collection.settings.show_rating.info"
+    }
+  ],
+  "blocks": [ 
+		{
+			"type": "slider",
+            "name": "t:sections.tm-verticaltab_collection.blocks.name",
+            "settings": [
+                {
+                  "type": "text",
+                  "id": "title1",
+  				  "default": "Latest",
+                  "label": "t:sections.tm-verticaltab_collection.blocks.settings.title1.label"
+                },
+				{
+                  "id": "collection",
+                  "type": "collection",
+  				  "label": "t:sections.tm-verticaltab_collection.blocks.settings.collection1.label"
+                }
+			]
+		},
+		{
+			"type": "grid",
+            "name": "t:sections.tm-verticaltab_collection.blocks.name1",
+            "settings": [
+				{
+                  "type": "text",
+                  "id": "title2",
+  				  "default": "Featured",
+                  "label": "t:sections.tm-verticaltab_collection.blocks.settings.title1.label"
+                  
+                },
+                {
+                  "id": "collection",
+                  "type": "collection",
+                  "label": "t:sections.tm-verticaltab_collection.blocks.settings.collection1.label"
+                },
+                {
+                  "type": "url",
+                  "id": "button_link",
+                  "label": "t:sections.tm-verticaltab_collection.blocks.settings.button_link.label"
+                },
+                {
+                  "type": "text",
+                  "id": "button_label",
+                  "label": "t:sections.tm-verticaltab_collection.blocks.settings.button_label.label",
+                  "default": "View All Products"
+                }
+			]
+		}
+	],
+	"presets": [
+    {
+      "name": "t:sections.tm-verticaltab_collection.presets.name"
+    }
+  ]
+
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+
+{% endjavascript %}

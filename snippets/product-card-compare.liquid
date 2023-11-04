@@ -1,0 +1,52 @@
+{% comment %}
+    Renders a product card
+
+    Accepts:
+    - card_product: {Object} Product Liquid object (optional)
+
+    Usage:
+    {% render 'card-product', show_vendor: section.settings.show_vendor %}
+{% endcomment %}
+
+{{ 'component-rating.css' | asset_url | stylesheet_tag }}
+
+<ul class="product-card-compare card-wrapper underline-links-hover">
+      <li> 
+      <div class="card card--{{ settings.card_style }}
+      {% if card_product.featured_media %} card--media{% else %} card--text{% endif %}">
+          <div class="card__inner">
+           <a href="{{ product.url }}" class="full-unstyled-link">
+           <div class="card__media1">
+              <div class="media--transparent media--hover-effect">
+                <img src="{{ product | image_url: width: 269 }}">
+              </div>
+            </div>
+            </a>
+            <div class="product-hover">     
+            <button type="button" aria-label="Add to compare" class="cm-link btn--status" button-compare data-product-handle="{{ product.handle }}">
+              {%- render 'icon-close' -%}
+            </button>
+            </div>
+            <div class="card-information">
+              <span class="card-information__text h5"><a href="{{ product.url }}" class="full-unstyled-link">{{ product.title }}</a></span>
+              {% render 'price' %}
+            </div>
+          </div>
+        </div>
+      </li>   
+      <li><span class="form__label">{{ 'accessibility.vendor' | t }}</span><span>{{ product.vendor }}</span></li>
+      <li><span class="form__label">{{'accessibility.product_type' | t }}</span><span>{{ product.type }}</span></li>
+      <li><span class="form__label">{{'products.product.sku' | t }}</span><span class="js-variant-sku">{{ product.selected_or_first_available_variant.sku | default:product.sku }}</span></li>
+	  <li><span class="form__label">{{'products.product.Availability' | t }}</span><span class="js-variant-availability">{%- if product.available -%}In Stock{%- else -%}Out Of Stock{%- endif -%}</span></li>
+      <li><span class="form__label">Color</span><span class="color">
+        	{% for color_option in product.options_by_name['Color'].values %}
+              <option style="background-color: {{ color_option | escape }};width:16px;display:inline-block;border-radius:50%;border:.1rem solid rgba(var(--color-foreground),.08);"></option>
+            {% endfor %}
+      </span></li>
+      <li><span class="form__label">Size</span><span>
+        {% for size_option in product.options_by_name['Size'].values %}
+        	<option>{{ size_option }}</option>
+        {% endfor %}
+        </span></li>
+</ul>
+     

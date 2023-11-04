@@ -1,0 +1,167 @@
+.bestseller-products .card-img {
+    float: left;
+    width: 36%;
+}
+.bestseller-products  .card-information {
+    float: left;
+    width: 64%;
+    padding: 22px 0 22px 30px;
+    position: relative;
+    min-height: 165px;
+}
+.bestseller-products .products {
+  /* 	border-radius: 5px; */
+}
+.bestseller-products .card-information__wrapper{
+	padding-top: 0;
+  	border: 0;
+}
+.bestseller .card-information__text.h5 a {
+    font-size: 14px;
+    line-height: 24px;
+}
+.bestseller-products .products .product-form .product-form__submit {
+    background: none;
+    padding: 0;
+       line-height: 15px;
+    font-weight: 500;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -khtml-border-radius: 0;
+    -moz-border-radius: 0;
+    -o-border-radius: 0;
+    border: none;
+    border-bottom: 1px solid var(--color-base-button-text);
+}
+
+.bestseller-products .products:hover .product-form .product-form__submit {
+       background: none;
+    color: var(--color-base-button-text);
+}
+.bestseller-products .products .product-form .product-form__submit:hover {
+    color: var(--color-base-button-background-hover);
+    border: none;
+}
+.bestseller-products .card__inner {
+    min-height: auto;
+}
+
+.bestseller-products .viewmore {
+    position: absolute;
+    right: 15px;
+    top: 0px;
+}
+.bestseller-products .viewmore .viewmore__btn {
+    background: none;
+    padding: 0;
+    justify-content: flex-start;
+    font-weight: 500;
+    border-bottom: 1px solid var(--color-base-button-text);
+    color: var(--color-base-button-text);
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -khtml-border-radius: 0;
+    -moz-border-radius: 0;
+    -o-border-radius: 0;
+}
+.bestseller-products .viewmore .viewmore__btn:hover {
+    color: var(--color-base-accent-1);
+    border-color: var(--color-base-accent-1);
+}
+.bestseller-products .products .card-information__wrapper > .price{
+	display: block;
+}
+.bestseller-products .products:hover .card-information__wrapper > .price{
+	display: none;
+}
+.bestseller-products .products .product-form{
+	display: none;
+ 	margin-top: 0;
+}
+.bestseller-products .products:hover .product-form{
+	display: block;
+}
+@media (min-width: 1269px) {
+    .bestseller-products .grid__item {
+        width: 33.33% !important;
+      	padding: 15px !important;
+    }
+    .bestseller-products .card-information {
+    	padding: 5px 0 0 20px;
+        min-height: auto;
+    }
+}
+
+@media (max-width: 1199px) {
+    .bestseller-products .card-information {
+        padding: 5px 0 0 20px;
+        min-height: auto;
+    }
+}
+@media (max-width: 989px) {
+    .bestseller-products .card-information {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 5px;
+    }
+  	.bestseller-products .product-form {
+        bottom: 30px;
+        left: 5px;
+    }
+  	.bestseller-products .card-img {
+        width: 40%;
+    }
+  	.bestseller-products .card-information {
+  		width: 60%;
+      	padding: 10px;
+    }
+    .bestseller-products .grid--4-col-desktop .grid__item {
+        width: 50%;
+        padding: 15px !important;
+    }
+  	.bestseller-products .card-information {
+  		min-height: auto;
+    }
+   .bestseller-products .card__inner::after {
+  		height: 110px;
+   }
+}
+@media (max-width: 650px) {
+    .bestseller-products .grid--4-col-desktop .grid__item {
+        width: 100%;
+    }
+  	.bestseller-products .card-information {
+        width: 70%;
+     }
+  	.bestseller-products .card-img {
+      	width: 30%;
+    }
+    .bestseller-products .card__inner::after {
+        height: 130px;
+    }
+}
+@media (max-width: 479px) {
+    .bestseller-products .card-information {
+        min-height: auto;
+    }
+    .bestseller-products .card-information__text {
+        white-space: unset;
+    }
+	.bestseller-products .card-information {
+        width: 60%;
+     }
+  	.bestseller-products .card-img {
+        width: 40%;
+     }
+}
+@media (max-width: 380px) {
+    .bestseller-products .card__inner::after {
+      	height: 110px;
+    }
+}
+@media (max-width: 320px) {
+  .bestseller-products .viewmore {
+  	 position: relative;
+     right: 0;
+  }
+}

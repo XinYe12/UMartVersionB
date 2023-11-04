@@ -1,0 +1,126 @@
+{{ 'header-sidecategory.css' | asset_url | stylesheet_tag }}
+<div class="overlay"></div>
+<div class="header-sidecategory">
+  
+ <span class="categories_title">
+     {{ section.settings.categories_title | escape }}
+     <span class="sidecategory_close">{% render 'icon-close' %} </span>  
+ </span>  
+  
+  <ul class="site-cat" id="header-SiteCat">                	         
+		{% for link in linklists[section.settings.side-categories].links %}
+    	{%- assign child_list_handle = link.title | handleize -%}
+    	{% if linklists[child_list_handle].links != blank %}
+      		<li class="site-cat--has-dropdown{% if link.active %} site-cat--active{% endif %}">
+        		<a href="{{ link.url }}" class="site-cat__link site-cat__link--main">
+          			{{ link.title }}
+                  	{% render 'icon-cat' %}
+        		</a>
+        		<div class="site-cat__dropdown site-nav__childlist-drop" id="SiteCatLabel-{{ child_list_handle }}">
+          			<ul class="has-dropdown">            
+                    	{% for childlink in linklists[child_list_handle].links %}
+             				{% assign grand_child_list_handle = childlink.title | handle %}            
+            				{% if linklists[grand_child_list_handle].links != blank %}
+								<li class="site-nav__childlist-item-dropdown"> 
+               						<a href="{{ childlink.url }}" class="site-nav__link site-nav__child-link site-nav__child-link--parent">{{ childlink.title | escape }}{% render 'icon-cat' %}</a>
+									<div class="header-nav__childlist site-cat__dropdown">
+                          				<ul class="grand-child-has-dropdown">
+                                        	{% for grandchildlink in linklists[grand_child_list_handle].links %}
+                                              <li>
+                                                  <a href="{{ grandchildlink.url }}" class="site-nav__link site-nav__child-link">{{ grandchildlink.title | escape }}</a>
+                                              </li> 
+                          					{% endfor %}
+                            			</ul>
+                        			</div>
+            					</li>
+            				{% else %}
+              					<li {% if childlink.active %}class="site-cat--active"{% endif %}>
+                					<a href="{{ childlink.url }}" class="site-cat__link site-cat__child-link{% if forloop.last %} site-cat__link--last{% endif %}">{{ childlink.title | escape }}</a>
+              					</li>
+            				{% endif %}
+            			{% endfor %}
+          			</ul>
+        		</div>
+      		</li>
+    	{% else %}
+      		<li {% if link.active %}class="site-cat--active"{% endif %}>
+        		<a href="{{ link.url }}" class="site-cat__link site-cat__link--main">{{ link.title }}</a>
+      		</li>
+    	{% endif %}
+  		{% endfor %}
+	</ul>
+</div>
+
+<script>
+  $(document).ready(function(){
+    $(document).on("click", ".side-categories", function () {
+    	$("body").addClass("menuslide_active");
+    	$("#CategoryBox .overlay").addClass("overlay_active");
+    });
+    $(document).on("click", ".header-sidecategory .sidecategory_close, .overlay", function () {
+    	$("body").removeClass("menuslide_active");
+    	$("#CategoryBox .overlay").removeClass("overlay_active");
+    });
+});
+  
+/*
+  function side_cat() {
+     if ($(window).width() <= 1269) {
+   			 var max_elem = 8;
+            var items = $('.header-sidecategory > ul > li');
+            var surplus = items.slice(max_elem, items.length);
+            surplus.wrapAll('<li class="hiden_menu_site"><div class="site-cat__dropdown"><ul>');
+            $('.hiden_menu_site').prepend('<a class="site-cat-more" href="#">more</a>')
+     }
+     else {
+            var max_elem = 12;
+            var items = $('.header-sidecategory > ul > li');
+            var surplus = items.slice(max_elem, items.length);
+            surplus.wrapAll('<li class="hiden_menu_site"><div class="site-cat__dropdown"><ul>');
+            $('.hiden_menu_site').prepend('<a class="site-cat-more" href="#">more</a>')
+        }
+  }
+  $(document).ready(function() {
+    side_cat()
+  });
+   */
+  function mobileToggleMenu2() {
+    $("#CategoryBox ul#header-SiteCat > li.site-cat--has-dropdown").append("<span class='mobile_togglemenu'> </span>");
+    $("#CategoryBox ul#header-SiteCat > li.site-cat--has-dropdown").addClass('toggle');
+    $("#CategoryBox ul#header-SiteCat > li.site-cat--has-dropdown .mobile_togglemenu").click(function() {
+        $(this).parent().toggleClass('active').find('.site-nav__childlist-drop').slideToggle('slow')
+    })
+  }
+  $(document).ready(mobileToggleMenu2);
+  
+  function mobileToggleMenu3() {
+    $("#CategoryBox  ul#header-SiteCat li.site-cat--has-dropdown .site-nav__childlist-item-dropdown").append("<span class='mobile_togglemenu'> </span>");
+    $("#CategoryBox  ul#header-SiteCat li.site-cat--has-dropdown .site-nav__childlist-item-dropdown").addClass('toggle');
+    $("#CategoryBox  ul#header-SiteCat li.site-cat--has-dropdown .site-nav__childlist-item-dropdown .mobile_togglemenu").click(function() {
+        $(this).parent().toggleClass('active').find('.header-nav__childlist.site-cat__dropdown').slideToggle('slow')
+    })
+  }
+  $(document).ready(mobileToggleMenu3);
+
+  /*
+  function mobileToggleMenu4() {
+    $("#CategoryBox  ul#header-SiteCat > li.hiden_menu_site").append("<span class='mobile_togglemenu'> </span>");
+    $("#CategoryBox  ul#header-SiteCat > li.hiden_menu_site").addClass('toggle');
+    $("#CategoryBox  ul#header-SiteCat > li.hiden_menu_site .mobile_togglemenu").click(function() {
+        $(this).parent().toggleClass('active').find('.site-cat__dropdown').slideToggle('slow')
+    })
+  }
+  $(document).ready(mobileToggleMenu4);
+  */
+
+ /* // Vertical Menu Slide Toggle
+      $(document).on("click", ".nav-trigger", function () {
+      $("body").addClass("menuslide_active");
+      $(".overlay").addClass("overlay_active");
+      });
+      $(document).on("click", ".vertical-menu .verticalmenu_close, .overlay", function () {
+      $("body").removeClass("menuslide_active");
+      $(".overlay").removeClass("overlay_active");
+      });
+  */
+</script>

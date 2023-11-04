@@ -1,0 +1,141 @@
+{{ 'section-tm-parallex.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'jarallax.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'jarallax-video.min.js' | asset_url }}" defer="defer"></script>
+
+
+<div class="tm-parallex">
+  
+    {% for block in section.blocks %}
+    {% if block.type == 'image' %}
+    {%- if block.settings.parallex_bg != blank -%}
+    <style>
+      .parallex-image {
+        background-image: url('{{ block.settings.parallex_bg | img_url: 'master' }}');
+          }
+    </style>
+    {% else %}
+    <style>
+      .parallex-image {
+        background-color: #e8e8e8;
+      }
+    </style>
+    {%- endif -%}
+    <div class="parallex-image" href="{{ block.settings.button_link }}"> 
+	<div class="page-width">
+      <div class="parallex-content">
+        <div class="parallex-heading" style="color: {{ block.settings.text_color}};">
+          {{  block.settings.heading }}
+        </div>
+        <div class="parallex-title" style="color: {{ block.settings.text_color}};">
+          {{  block.settings.title }}
+        </div>
+        {% if block.settings.button_link != blank %}
+        <div class="parallex-button">
+          <div  class="button parallex__btn">
+            <a href="{{ block.settings.button_link }}">
+            {{ block.settings.button_label | escape }}
+            </a>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+ </div>
+
+    </div>
+    {% endif %}
+    {% if block.type == 'video' %}
+    {%- if block.settings.video_url.type == 'youtube' -%}
+    <div class="jarallax" data-jarallax-video="https://www.youtube.com/embed/{{ block.settings.video_url.id }}"></div>
+    {%- else -%}
+    <div class="jarallax" data-jarallax-video="https://player.vimeo.com/video/{{ block.settings.video_url.id }}"></div>
+    {%- endif -%}
+    <script type="text/javascript">
+
+      objectFitImages();
+      /* init Jarallax */
+      jarallax(document.querySelectorAll('.jarallax'));
+
+    </script>
+
+    {% endif %}
+    {% endfor %}
+
+
+ 
+</div>
+
+
+{% schema %}
+  {
+    "name": "t:sections.tm-parallex.name",
+	"tag": "section",
+	"class": "tm-parallex spaced-section",
+	"max_blocks": 1,
+      "blocks": [
+      { 
+        "type": "image",
+		"name": "t:sections.tm-parallex.blocks.image.name",
+        "settings": [
+	      {
+          "type": "image_picker",
+          "id": "parallex_bg",
+          "label": "t:sections.tm-parallex.blocks.image.settings.parallex_bg.label"
+    	  },
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "t:sections.tm-parallex.blocks.image.settings.heading.label",
+			"default": "Amazing Deals Just For You!"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "t:sections.tm-parallex.blocks.image.settings.title.label",
+			"default": "Custom Made New Design  Autumn Fashion"
+          },
+          {
+            "type": "url",
+            "id": "button_link",
+            "label": "t:sections.tm-parallex.blocks.image.settings.button_link.label"
+          },
+          {
+            "type": "text",
+            "id": "button_label",
+            "label": "t:sections.tm-parallex.blocks.image.settings.button_label.label",
+            "default": "view more"
+          },
+		  {
+            "type": "color",
+            "id": "text_color",
+            "default": "#222222",
+            "label": "t:sections.tm-parallex.blocks.image.settings.text_color.label"
+          }	 
+        ]
+      },
+      {
+      "type": "video",
+      "name": "t:sections.tm-parallex.blocks.video.name1",
+      "settings": [
+                    {
+                      "type": "video_url",
+                      "id": "video_url",
+                      "accept": [
+                                  "youtube",
+                                  "vimeo"
+                                ],
+                      "default": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc",
+                      "label": "t:sections.tm-parallex.blocks.video.settings.video_url.label",
+                      "placeholder": "t:sections.tm-parallex.blocks.video.settings.video_url.placeholder"
+                    }
+      			]
+      }
+    ],
+	"presets": [
+      {
+      "name": "t:sections.tm-parallex.presets.name"
+      }
+    ]
+  }
+{% endschema %}
+

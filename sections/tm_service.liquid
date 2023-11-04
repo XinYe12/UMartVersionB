@@ -1,0 +1,98 @@
+{{ 'section-tm_service.css' | asset_url | stylesheet_tag }}
+
+	<div class="service-block" data-section-id="{{ section.id }}" data-section-type="services-section">
+    	<div class="page-width page-width-desktop">
+          {% if section.blocks.size > 0 %}
+            <div class="services-wrapper">
+              <div class="services" id="services-{{ section.id }}">
+                {%- assign i = 1 -%}
+                  {% for block in section.blocks %} 
+                  	<a href="{{ block.settings.service-link }}" class="service service-{{ i }}">
+                    	<div class="service-icon service-icon{{ block.id }}"></div>
+                        	<div class="service-description"> 
+                            	<div class="service-title">{{ block.settings.service-title | escape }}</div>
+                                <div class="service-subtitle">{{ block.settings.service-subtitle }}</div>
+                        	</div>
+                            <div class="text-button">
+                              <div class="button cms__btn">
+                                 {{  block.settings.button_label }}
+                              </div>
+                            </div> 
+                      	</a>
+                   		{% if block.settings.icon != blank %}
+                        <style>
+                            .service-icon{{ block.id }} {background-image: url('{{ block.settings.icon | img_url: '41x154' }}');}
+                        </style>
+                      	{% endif %}
+                		{%- assign i = i | plus:1 -%}
+                  {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+          {% if section.blocks.size == 0 %}
+            <div class="placeholder-noblocks">
+              {{ 'homepage.onboarding.no_content' | t }}
+            </div>
+          {% endif %}      
+  		</div>  
+	</div>
+
+
+{% schema %}
+  {
+	"name": "t:sections.tm_service.name",
+  	"tag": "section",
+  	"class": "spaced-section service-section",
+    "max_blocks": 4,
+    "settings": [
+		
+	],
+    "blocks": [
+      { 
+        "type": "service_image",
+        "name": "t:sections.tm_service.blocks.name",
+        "settings": [
+  		  {
+            "type": "image_picker",
+            "id": "icon",
+            "label": "t:sections.tm_service.blocks.settings.icon.label"
+          },
+          {
+            "type": "text",
+            "id": "service-title",
+            "label": "t:sections.tm_service.blocks.settings.service-title.label",
+            "default": "service title"
+          },
+ 		  {
+            "type": "text",
+            "id": "service-subtitle",
+            "label": "t:sections.tm_service.blocks.settings.service-subtitle.label",
+            "default": "Refer friends & get 30%  discount on all item."
+          },
+          {
+            "type": "text",
+            "id": "button_label",
+            "label": "t:sections.tm_service.blocks.settings.button_label.label",
+            "default": "Read More"
+          },
+          {
+            "type": "url",
+            "id": "button_link",
+            "label": "t:sections.tm_service.blocks.settings.button_link.label"
+          },
+		  {
+            "type": "url",
+            "id": "service-link",
+            "label": "t:sections.tm_service.blocks.settings.service-link.label"
+          }
+        ]
+      }
+    ],
+	"presets": [
+      {
+        "name": "t:sections.tm_service.presets.name",
+        "category": "t:sections.tm_service.presets.category"
+      }
+    ]
+  }
+{% endschema %}

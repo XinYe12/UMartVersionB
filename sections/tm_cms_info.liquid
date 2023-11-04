@@ -1,0 +1,126 @@
+{{ 'tm_cms_info.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .cms_info
+  {
+  	background-color: {{ section.settings.bg_color}};
+  }
+</style>
+<div class="page-width page-width-desktop">
+	<div class="cms_info" data-section-id="{{ section.id }}" data-section-type="info-section">
+ 
+    <h2 class="title{% if section.settings.title == blank %} title--no-heading{% endif %}">{{ section.settings.title | escape }}</h2>
+    <div class="left-block">
+
+    </div>
+    {% if section.blocks.size > 0 %}
+    <div class="info-wrapper">
+      <div class="cms_information">
+        {%- assign i = 1 -%}
+        {% for block in section.blocks %} 
+        <div class="info_service info_service-{{ i }}">
+          <div class="info-block info-block-{{ i }}">
+            <div class="info-icon info-icon{{ block.id }}"></div>
+            <div class="info-description"> 
+              <div class="info-title">{{ block.settings.info-title | escape }}</div>
+            </div>
+            <div class="info-subdescription">        
+            	<div class="info-subtitle">{{ block.settings.info-subtitle }}</div>
+            </div>
+            <div class="info-btn">{{ block.settings.button_label }}</div>
+          </div>
+        </div>
+        {% if block.settings.icon != blank %}
+        <style>
+          .info-icon{{ block.id }} {background-image: url('{{ block.settings.icon | img_url: '65x37' }}');}
+        </style>
+        {% endif %}
+        {%- assign i = i | plus:1 -%}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}     
+  </div>  
+</div>
+
+
+{% schema %}
+  {
+	"name": "t:sections.tm_cms_info.name",
+  	"tag": "section",
+  	"class": "spaced-section cms_info-section spaced-section--full-width",
+    "max_blocks": 3,
+	  "settings": [
+     {
+      "type": "text",
+      "id": "title",
+      "default": "About Our Store",
+      "label": "t:sections.tm_cms_info.settings.title.label"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.tm_cms_info.settings.height.options__1.label"
+        },
+        {
+          "value": "small",
+          "label": "t:sections.tm_cms_info.settings.height.options__2.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.tm_cms_info.settings.height.options__3.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.tm_cms_info.settings.height.label"
+    },
+	{
+        "type": "color",
+        "id": "bg_color",
+        "default": "#129CB8",
+        "label": "t:sections.tm_cms_info.settings.bg_color.label"
+     }
+  ],
+    
+    "blocks": [
+      { 
+        "type": "info_image",
+        "name": "t:sections.tm_cms_info.blocks.name",
+        "settings": [
+  		  {
+            "type": "image_picker",
+            "id": "icon",
+            "label": "t:sections.tm_cms_info.blocks.settings.icon.label"
+          },
+          {
+            "type": "text",
+            "id": "info-title",
+            "label": "t:sections.tm_cms_info.blocks.settings.info-title.label",
+            "default": "Free Shipping"
+          },
+ 		  {
+            "type": "text",
+            "id": "info-subtitle",
+            "label": "t:sections.tm_cms_info.blocks.settings.info-subtitle.label",
+			"default": "Free Delivery Now On Your First Order and over $200"
+          },
+		 {
+          "type": "text",
+          "id": "button_label",
+          "default": "- Only $200*",
+          "label": "t:sections.tm_cms_info.blocks.settings.button_label.label"
+         }
+        ]
+      }
+    ],
+	"presets": [
+      {
+        "name": "t:sections.tm_cms_info.presets.name",
+        "category": "t:sections.tm_cms_info.presets.category"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,23 @@
+.list-payment {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-left: 0;
+  margin:0;
+}
+
+@media screen and (min-width: 990px) {
+  .list-payment {
+    justify-content: right;
+  }
+}
+
+.list-payment__item {
+  align-items: center;
+  display: flex;
+  padding: 0 0.5rem;
+}
+
+.list-payment__item:nth-child(3) {
+    display: none;
+}

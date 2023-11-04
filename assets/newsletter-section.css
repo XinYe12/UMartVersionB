@@ -1,0 +1,176 @@
+.template-index #shopify-section-newsletter {
+    margin-top: 30px;
+}
+
+#shopify-section-newsletter {
+	margin-top: 80px;
+}
+
+.newsletter__wrapper .field__input {
+	    height: 48px;
+    background-color: var(--color-base-button-text-hover);
+    border-radius: 30px;
+}
+.newsletter__wrapper {
+	float: left;
+	width: 100%;
+}
+.newsletter-left {
+        width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+}
+.newsletter.center {
+	text-align: left;
+    padding: 64px 0;
+    float: left;
+    width: 100%;
+    overflow: hidden;
+}
+.newsletter__button.button .icon-send {
+  	width: 20px;
+	height: 20px;
+
+}
+
+.newsletter.center .h1 {
+	position: relative;
+    color: var(--color-base-background-1);
+    font-weight: 600;
+    text-transform: capitalize;
+    letter-spacing: 0;
+    margin: 0;
+    font-size: 26px;
+   width: 75%;
+    float: left;
+    line-height: 32px;
+}
+ .newsletter__subheading.rte a {
+	color: var(--color-base-accent-1);
+	font-weight: 600;
+	font-size: 14px;
+}
+.newsletter__subheading {
+	letter-spacing: .7px;
+}
+.newsletter-form__field-wrapper .field__label {
+	    font-size: 13px;
+    line-height: 30px;
+    top: 10px;
+    left: 25px;
+    letter-spacing: .4px;
+    color: var(--color-base-text);
+}
+.newsletter .newsletter__subheading.rte {
+	font-size: 14px;
+    color: var(--color-base-background-1);
+    text-transform: none;
+    line-height: 30px;
+    display: block;
+    margin: 12px 0 20px;
+}
+.newsletter__wrapper .newsletter-form__field-wrapper {
+  /* max-width: 45rem; */
+}
+
+.newsletter-form__field-wrapper .newsletter-form__message {
+  margin-top: 1.5rem;
+}
+
+.newsletter__button.button {
+    height: 42px;
+    right: 3px;
+    top: 3px;
+    position: absolute;
+    margin: 0;
+    color: var(--color-base-button-text-hover);
+    padding: 9px 20px;
+    border-radius: 30px;
+    background-color: var(--color-base-accent-1);
+    width: auto;
+}
+.newsletter.center .footer__list-social.list-unstyled.list-social {
+	float: right;
+	margin: 15px 0px 0;
+}
+.newsletter.center .footer__list-social .list-social__item {
+	margin: 0 5px;
+}
+.newsletter.center .icon.icon-mail {
+	width: 65px;
+    height: 50px;
+    fill: #fff;
+    float: left;
+}
+
+@media screen and (max-width: 1429px) {
+    
+}
+@media screen and (max-width: 1399px) {
+   
+}
+@media screen and (max-width: 1269px) {
+  
+}
+
+@media screen and (max-width: 1129px) {
+  
+}
+
+@media screen and (max-width: 989px) 
+{
+    .newsletter-left {
+      width: 100%;
+    }
+	.newsletter.center .h1 {
+        width: 53%;
+        font-size: 22px;
+        line-height: 28px;
+    }
+}
+
+@media screen and (min-width: 750px) {
+  .newsletter__button {
+    flex-shrink: 0;
+    margin: 0 0 0 1rem;
+  }
+}
+
+ @media screen and (max-width: 575px) {
+	.newsletter.center .h1 {
+          width: 55%;
+        font-size: 18px;
+        line-height: 24px;
+    }
+   .newsletter .newsletter__subheading.rte {
+        line-height: 20px;
+    }
+}  
+
+@media screen and (max-width: 480px) {
+  .newsletter.center .h1 {
+    font-size: 16px;
+    line-height: 20px;
+  }
+  .newsletter .newsletter__subheading.rte {
+    line-height: 18px;
+    font-size: 13px;
+  }
+}
+@media screen and (max-width: 380px) {
+  .newsletter.center .h1 {
+    font-size: 16px;
+  }
+  .newsletter-form__field-wrapper .field__label {
+    font-size: 12px;
+  }
+  .newsletter__button.button {
+    position: relative;
+    background-color: var(--color-base-button-text-hover);
+    color: var(--color-base-accent-1);
+    border: 1px solid var(--color-base-accent-1);
+  }
+}
